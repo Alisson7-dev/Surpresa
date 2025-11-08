@@ -79,7 +79,7 @@ setInterval(nextSlide, 4000);
 // ===== Música (safe autoplay) =====
 const musicBtn = document.getElementById('musicBtn');
 const audio = document.getElementById('bgAudio');
-let playing = false;
+let playing = true;
 
 musicBtn.addEventListener('click', () => {
   if (!playing) {

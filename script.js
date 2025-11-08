@@ -75,18 +75,35 @@ const audio = document.getElementById('bgAudio');
 let playing = false;
 
 musicBtn.addEventListener('click', () => {
-  if (!audio.querySelector('source')) return alert('Adicione a música no HTML antes de tocar 🎶');
-  
+  if (!audio.querySelector('source')) {
+    alert('Adicione a música no HTML antes de tocar 🎶');
+    return;
+  }
+
   if (playing) {
     audio.pause();
     musicBtn.textContent = '▶︎ Tocar música';
   } else {
-    audio.play().catch(err => {
-      console.log('Não foi possível tocar a música:', err);
-      alert('O navegador bloqueou a reprodução automática. Clique no botão novamente.');
-    });
-    musicBtn.textContent = '❚❚ Pausar';
+    audio.play()
+      .then(() => {
+        musicBtn.textContent = '❚❚ Pausar';
+        playing = true;
+      })
+      .catch(err => {
+        console.log('Erro ao tocar a música:', err);
+        alert('O navegador bloqueou a reprodução automática. Clique no botão novamente.');
+      });
   }
+});
+
+audio.addEventListener('pause', () => {
+  playing = false;
+  musicBtn.textContent = '▶︎ Tocar música';
+});
+
+audio.addEventListener('play', () => {
+  playing = true;
+  musicBtn.textContent = '❚❚ Pausar';
 });
 
 

@@ -74,26 +74,21 @@ const musicBtn = document.getElementById('musicBtn');
 const audio = document.getElementById('bgAudio');
 let playing = false;
 
-musicBtn.addEventListener('click', async () => {
-  if (!audio.querySelector('source')) {
-    return alert('Adicione a música no HTML antes de tocar 🎶');
-  }
+musicBtn.addEventListener('click', () => {
+  if (!audio.querySelector('source')) return alert('Adicione a música no HTML antes de tocar 🎶');
   
-  try {
-    if (playing) {
-      await audio.pause();
-      musicBtn.textContent = '▶︎ Tocar música';
-    } else {
-      await audio.play();
-      musicBtn.textContent = '❚❚ Pausar';
-    }
-  } catch (err) {
-    console.log('Erro ao tocar música:', err);
+  if (playing) {
+    audio.pause();
+    musicBtn.textContent = '▶︎ Tocar música';
+  } else {
+    audio.play().catch(err => {
+      console.log('Não foi possível tocar a música:', err);
+      alert('O navegador bloqueou a reprodução automática. Clique no botão novamente.');
+    });
+    musicBtn.textContent = '❚❚ Pausar';
   }
 });
 
-audio.addEventListener('play', () => playing = true);
-audio.addEventListener('pause', () => playing = false);
 
 
 // ===== Modal da carta =====

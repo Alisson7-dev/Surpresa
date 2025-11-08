@@ -81,43 +81,20 @@ const musicBtn = document.getElementById('musicBtn');
 const audio = document.getElementById('bgAudio');
 let playing = false;
 
-async function tryPlay() {
-  try {
-    await audio.play();
-    if (musicBtn) musicBtn.textContent = '❚❚ Pausar';
-    return true;
-  } catch (err) {
-    console.log('play() bloqueado:', err);
-    alert('O navegador bloqueou a reprodução automática. Clique no botão "Tocar música" para permitir o som.');
-    return false;
-  }
-}
-
-// Inicia música após clique em "Começar"
-startBtn?.addEventListener('click', async () => {
-  await tryPlay();
-});
-
-// Botão play/pause
-musicBtn?.addEventListener('click', async () => {
-  if (!audio.querySelector('source')) {
-    alert('Adicione a música no HTML antes de tocar 🎶');
-    return;
-  }
-
-  if (playing) {
+musicBtn.addEventListener('click', () => {
+  if (!playing) {
+    audio.play().catch(err => {
+      console.log('Erro ao tentar tocar:', err);
+    
+    });
+    musicBtn.textContent = '❚❚ Pausar';
+    playing = true;
+  } else {
     audio.pause();
     musicBtn.textContent = '▶︎ Tocar música';
     playing = false;
-    return;
   }
-
-  const ok = await tryPlay();
-  if (ok) playing = true;
 });
-
-audio.addEventListener('play', () => { playing = true; if (musicBtn) musicBtn.textContent = '❚❚ Pausar'; });
-audio.addEventListener('pause', () => { playing = false; if (musicBtn) musicBtn.textContent = '▶︎ Tocar música'; });
 
 // ===== Modal da carta =====
 const revealBtn = document.getElementById('revealBtn');

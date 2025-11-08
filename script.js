@@ -76,24 +76,52 @@ renderDots();
 updateCarousel();
 setInterval(nextSlide, 4000);
 
-// ===== Música (safe autoplay) =====
-const musicBtn = document.getElementById('musicBtn');
-const audio = document.getElementById('bgAudio');
-let playing = true;
 
+const musicBtn = document.getElementById('musicBtn');
+const startBtn = document.getElementById('startBtn');
+const audio = document.getElementById('bgAudio');
+let playing = false;
+
+
+function playMusic() {
+  
+  audio.play().then(() => {
+    playing = true;
+    musicBtn.textContent = '❚❚ Pausar';
+  }).catch(err => {
+    console.log('Reprodução bloqueada pelo navegador:', err);
+  
+  });
+}
+
+function pauseMusic() {
+  audio.pause();
+  playing = false;
+  musicBtn.textContent = '▶︎ Tocar música';
+}
+
+// Botão de música
 musicBtn.addEventListener('click', () => {
   if (!playing) {
-    audio.play().catch(err => {
-      console.log('Erro ao tentar tocar:', err);
-    
-    });
-    musicBtn.textContent = '❚❚ Pausar';
-    playing = true;
+    playMusic();
   } else {
-    audio.pause();
-    musicBtn.textContent = '▶︎ Tocar música';
-    playing = false;
+    pauseMusic();
   }
+});
+
+startBtn.addEventListener('click', () => {
+  if (!playing) playMusic();
+});
+
+
+audio.addEventListener('play', () => {
+  playing = true;
+  musicBtn.textContent = '❚❚ Pausar';
+});
+
+audio.addEventListener('pause', () => {
+  playing = false;
+  musicBtn.textContent = '▶︎ Tocar música';
 });
 
 // ===== Modal da carta =====

@@ -73,13 +73,28 @@ setInterval(nextSlide,4000);
 const musicBtn = document.getElementById('musicBtn');
 const audio = document.getElementById('bgAudio');
 let playing = false;
-musicBtn.addEventListener('click',()=>{
-  if(!audio.querySelector('source')) return alert('Adicione a música no HTML antes de tocar 🎶');
-  if(playing){ audio.pause(); musicBtn.textContent='▶︎ Tocar música'; }
-  else{ audio.play(); musicBtn.textContent='❚❚ Pausar'; }
+
+musicBtn.addEventListener('click', async () => {
+  if (!audio.querySelector('source')) {
+    return alert('Adicione a música no HTML antes de tocar 🎶');
+  }
+  
+  try {
+    if (playing) {
+      await audio.pause();
+      musicBtn.textContent = '▶︎ Tocar música';
+    } else {
+      await audio.play();
+      musicBtn.textContent = '❚❚ Pausar';
+    }
+  } catch (err) {
+    console.log('Erro ao tocar música:', err);
+  }
 });
-audio.addEventListener('play',()=> playing=true);
-audio.addEventListener('pause',()=> playing=false);
+
+audio.addEventListener('play', () => playing = true);
+audio.addEventListener('pause', () => playing = false);
+
 
 // ===== Modal da carta =====
 const revealBtn = document.getElementById('revealBtn');

@@ -70,11 +70,40 @@ updateCarousel();
 setInterval(nextSlide,4000);
 
 // ===== Música =====
+const startBtn = document.getElementById('startBtn');
 const musicBtn = document.getElementById('musicBtn');
 const audio = document.getElementById('bgAudio');
-let playing = false;
 
-musicBtn.addEventListener('click', () => {
+// garante atributos HTML úteis:
+// <audio id="bgAudio" loop playsinline preload="auto">
+//   <source src="img/music.mp3" type="audio/mpeg">
+// </audio>
+
+async function tryPlay() {
+  // evita chamadas duplicadas
+  try {
+    await audio.play();
+    // se deu certo, atualiza texto/estado
+    musicBtn && (musicBtn.textContent = '❚❚ Pausar');
+    return true;
+  } catch (err) {
+    console.log('play() bloqueado:', err);
+    // instruir o usuário a clicar de novo (ou permitir som)
+    alert('O navegador bloqueou a reprodução automática. Toque no botão "Tocar música" para permitir o som.');
+    return false;
+  }
+}
+
+// tocar quando o usuário clicar em "Começar" — boa UX: iniciar após um gesto
+startBtn?.addEventListener('click', async () => {
+  // você pode querer tocar só se a pessoa aceitar
+  await tryPlay();
+});
+
+// comportamento do botão de música (play/pause seguro)
+let playing = false;
+musicBtn?.addEventListener('click', async () => {
+  // se não tiver source, avisa
   if (!audio.querySelector('source')) {
     alert('Adicione a música no HTML antes de tocar 🎶');
     return;
@@ -83,27 +112,20 @@ musicBtn.addEventListener('click', () => {
   if (playing) {
     audio.pause();
     musicBtn.textContent = '▶︎ Tocar música';
-  } else {
-    audio.play()
-      .then(() => {
-        musicBtn.textContent = '❚❚ Pausar';
-        playing = true;
-      })
-      .catch(err => {
-        console.log('Erro ao tocar a música:', err);
-        alert('O navegador bloqueou a reprodução automática. Clique no botão novamente.');
-      });
+    playing = false;
+    return;
   }
+
+  const ok = await tryPlay();
+  if (ok) playing = true;
 });
 
-audio.addEventListener('pause', () => {
-  playing = false;
-  musicBtn.textContent = '▶︎ Tocar música';
-});
+audio.addEventListener('play', () => { playing = true; if (musicBtn) musicBtn.textContent = '❚❚ Pausar'; });
+audio.addEventListener('pause', () => { playing = false; if (musicBtn) musicBtn.textContent = '▶︎ Tocar música'; });
 
-audio.addEventListener('play', () => {
-  playing = true;
-  musicBtn.textContent = '❚❚ Pausar';
+// opcional: só alterar UI quando áudio realmente estiver carregado
+audio.addEventListener('canplaythrough', () => {
+  // arquivo carregado o suficiente
 });
 
 

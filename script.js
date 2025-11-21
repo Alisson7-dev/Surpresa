@@ -78,7 +78,6 @@ setInterval(nextSlide, 4000);
 
 
 const musicBtn = document.getElementById('musicBtn');
-const startBtn = document.getElementById('startBtn');
 const audio = document.getElementById('bgAudio');
 let playing = false;
 

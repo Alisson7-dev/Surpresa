@@ -77,52 +77,6 @@ updateCarousel();
 setInterval(nextSlide, 4000);
 
 
-const musicBtn = document.getElementById('musicBtn');
-const audio = document.getElementById('bgAudio');
-let playing = false;
-
-
-function playMusic() {
-  
-  audio.play().then(() => {
-    playing = true;
-    musicBtn.textContent = '❚❚ Pausar';
-  }).catch(err => {
-    console.log('Reprodução bloqueada pelo navegador:', err);
-  
-  });
-}
-
-function pauseMusic() {
-  audio.pause();
-  playing = false;
-  musicBtn.textContent = '▶︎ Tocar música';
-}
-
-// Botão de música
-musicBtn.addEventListener('click', () => {
-  if (!playing) {
-    playMusic();
-  } else {
-    pauseMusic();
-  }
-});
-
-startBtn.addEventListener('click', () => {
-  if (!playing) playMusic();
-});
-
-
-audio.addEventListener('play', () => {
-  playing = true;
-  musicBtn.textContent = '❚❚ Pausar';
-});
-
-audio.addEventListener('pause', () => {
-  playing = false;
-  musicBtn.textContent = '▶︎ Tocar música';
-});
-
 // ===== Modal da carta =====
 const revealBtn = document.getElementById('revealBtn');
 const modal = document.getElementById('modal');
